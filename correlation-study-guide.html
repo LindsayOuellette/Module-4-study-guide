@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 4: Correlation — Study Guide</title>
+<style>
+:root{
+  --ink:#15202b; --ink-soft:#42536b; --ink-faint:#7b8ba3;
+  --paper:#fdfcfa; --panel:#ffffff; --line:#e2e0da;
+  --accent:#9c4221; --accent-soft:#fdf3ee; --accent-line:#e8c3ae;
+  --teal:#1b6b6b; --teal-soft:#eef7f6;
+  --gold:#8a6d1f; --gold-soft:#fbf5e3;
+  --plum:#5b3a76; --plum-soft:#f4eefa;
+  --ok:#1f6b3f; --ok-soft:#ecf6f0;
+  --no:#9b2c2c; --no-soft:#fbeeee;
+  --blue:#2c4fa8; --blue-soft:#eef2fb;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--sans); color:var(--ink); background:var(--paper); -webkit-font-smoothing:antialiased; line-height:1.6}
+
+/* ── Top bar ── */
+#bar{position:fixed; top:0; left:0; right:0; height:52px; z-index:200;
+  background:rgba(253,252,250,.94); backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line); display:flex; align-items:center; gap:14px; padding:0 16px}
+#bar .brand{font-family:var(--serif); font-weight:600; font-size:15px; white-space:nowrap}
+#bar .brand small{display:block; font-family:var(--sans); font-size:10.5px; color:var(--ink-faint); letter-spacing:.08em; text-transform:uppercase; font-weight:600}
+#bar .spacer{flex:1}
+
+/* ── Main ── */
+#main{padding:52px 0 0}
+.wrap{max-width:1120px; margin:0 auto; padding:0 40px}
+section.sec{display:none; min-height:calc(100vh - 110px); padding:60px 0 40px}
+section.sec.active{display:block}
+.eyebrow{font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; color:var(--accent); margin-bottom:10px}
+h1{font-family:var(--serif); font-size:44px; line-height:1.12; margin:0 0 16px; font-weight:600; letter-spacing:-.015em}
+h2{font-family:var(--serif); font-size:31px; line-height:1.2; margin:0 0 16px; font-weight:600; letter-spacing:-.01em}
+h3{font-size:15.5px; margin:26px 0 9px; font-weight:700}
+p{margin:0 0 14px; font-size:16px; color:var(--ink-soft)}
+.lede{font-size:18.5px; color:var(--ink); line-height:1.55}
+strong{color:var(--ink); font-weight:650}
+
+/* ── Components ── */
+.key{border-left:3px solid var(--accent); background:var(--accent-soft); padding:16px 20px; margin:20px 0; border-radius:0 8px 8px 0}
+.key p{margin:0 0 10px; color:var(--ink); font-size:16.5px}
+.key p:last-child{margin:0}
+.key .lbl{font-size:10px; letter-spacing:.13em; text-transform:uppercase; font-weight:700; color:var(--accent); margin-bottom:6px}
+.key.t{border-left-color:var(--teal); background:var(--teal-soft)} .key.t .lbl{color:var(--teal)}
+.key.g{border-left-color:var(--gold); background:var(--gold-soft)} .key.g .lbl{color:var(--gold)}
+.key.p{border-left-color:var(--plum); background:var(--plum-soft)} .key.p .lbl{color:var(--plum)}
+.key.b{border-left-color:var(--blue); background:var(--blue-soft)} .key.b .lbl{color:var(--blue)}
+
+.card{border:1px solid var(--line); border-radius:10px; padding:18px 19px; background:var(--panel)}
+.card h4{margin:0 0 8px; font-size:14.5px; font-weight:700}
+.card p{font-size:14.5px; margin-bottom:8px}
+.card p:last-child{margin-bottom:0}
+.card.ok{border-color:#b9dcc7; background:var(--ok-soft)}
+.card.no{border-color:#ecc3c3; background:var(--no-soft)}
+
+.cols{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:20px 0}
+
+/* ── Quiz components ── */
+.demo{border:1px solid var(--line); border-radius:11px; margin:22px 0; background:var(--panel); overflow:hidden}
+.demo > header{padding:11px 17px; background:#f7f5f1; border-bottom:1px solid var(--line);
+  font-size:11px; letter-spacing:.11em; text-transform:uppercase; font-weight:700; color:var(--ink-soft);
+  display:flex; align-items:center; justify-content:space-between; gap:10px}
+.demo > header .hint{text-transform:none; letter-spacing:0; font-weight:500; font-size:12px; color:var(--ink-faint)}
+.demo .pad{padding:20px}
+
+.scorebar-wrap{display:flex; align-items:center; gap:14px; padding:14px 18px; background:#f7f5f1; border-top:1px solid var(--line); font-size:14px; color:var(--ink-soft)}
+.scorebar-wrap b{font-size:20px; color:var(--ink); font-variant-numeric:tabular-nums; font-family:var(--serif)}
+.sbar{flex:1; height:7px; background:#e6e3dc; border-radius:5px; overflow:hidden; min-width:70px}
+.sfill{height:100%; width:0; background:var(--ok); transition:width .4s}
+
+.q-item{border-top:1px solid var(--line); padding:16px 0}
+.q-item:first-child{border-top:0; padding-top:0}
+.q-text{font-size:15.5px; color:var(--ink); margin:0 0 11px; line-height:1.55}
+.q-text .num{color:var(--ink-faint); font-variant-numeric:tabular-nums; margin-right:8px; font-size:13px}
+
+.opts{display:flex; gap:8px; flex-wrap:wrap}
+.opts button{font:inherit; font-size:13px; font-weight:600; border:1px solid var(--line); background:#fff; color:var(--ink-soft); border-radius:20px; padding:6px 15px; cursor:pointer; transition:all .15s}
+.opts button:hover:not(:disabled){border-color:var(--ink-faint); color:var(--ink)}
+.opts button:disabled{cursor:default}
+.opts button.right{background:var(--ok-soft); border-color:var(--ok); color:var(--ok)}
+.opts button.wrong{background:var(--no-soft); border-color:var(--no); color:var(--no)}
+
+.fb{margin-top:12px; font-size:14.2px; padding:12px 15px; border-radius:8px; display:none; line-height:1.55}
+.fb.show{display:block}
+.fb.y{background:var(--ok-soft); border:1px solid #b9dcc7; color:#1c4d33}
+.fb.n{background:var(--no-soft); border:1px solid #ecc3c3; color:#7a2626}
+
+.btn{font:inherit; font-size:13.5px; font-weight:600; border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:7px; padding:8px 15px; cursor:pointer}
+.btn:hover{border-color:var(--ink-faint)}
+.btn.solid{background:var(--ink); color:#fff; border-color:var(--ink)}
+.btn.solid:hover{background:var(--accent); border-color:var(--accent)}
+.btn.sm{font-size:12.5px; padding:6px 12px}
+
+/* Scenario block */
+.scenario{background:#fbfaf7; border:1px solid var(--line); border-radius:10px; padding:18px 20px; margin:0 0 16px}
+.scenario p{font-size:14.5px; margin:0 0 10px; color:var(--ink-soft); line-height:1.6}
+.scenario p:last-child{margin-bottom:0}
+.scenario .slabel{font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; font-weight:700; color:var(--accent); margin-bottom:8px}
+
+/* Output block */
+.output{font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace; font-size:12.5px;
+  background:#fff; border:1px solid var(--line); border-radius:8px; padding:14px 16px; margin:14px 0;
+  color:var(--ink-soft); line-height:1.7; white-space:pre-wrap}
+.output strong{color:var(--ink)}
+
+/* APA write-up box */
+.apa{border:2px solid var(--plum); border-radius:10px; margin:14px 0; overflow:hidden}
+.apa header{padding:8px 14px; background:var(--plum-soft); font-size:11px; letter-spacing:.11em; text-transform:uppercase; font-weight:700; color:var(--plum)}
+.apa .body{padding:14px 16px; font-size:14.8px; line-height:1.65; color:var(--ink)}
+.apa .body em{color:var(--plum); font-style:italic}
+
+/* Full practice item */
+.practice-item{margin:0 0 28px; padding-bottom:28px; border-bottom:1px solid var(--line)}
+.practice-item:last-child{border-bottom:0; margin-bottom:0; padding-bottom:0}
+
+/* Dropdown / textarea rows */
+.answer-row{display:flex; align-items:flex-start; gap:10px; margin:8px 0; flex-wrap:wrap}
+.answer-row label{font-size:13.5px; font-weight:700; color:var(--ink); min-width:90px; padding-top:7px}
+.answer-row textarea{font:inherit; font-size:13.5px; padding:9px 12px; border:1px solid var(--line); border-radius:7px; background:#fff; color:var(--ink); width:100%; min-height:72px; resize:vertical; line-height:1.5}
+.answer-row textarea:focus{outline:2px solid var(--accent-line); outline-offset:-1px}
+
+/* Reveal answer */
+.reveal-btn{font:inherit; font-size:12.5px; font-weight:600; border:1px solid var(--accent-line); background:var(--accent-soft); color:var(--accent); border-radius:7px; padding:7px 14px; cursor:pointer; margin-top:8px}
+.reveal-btn:hover{background:var(--accent); color:#fff}
+.revealed{margin-top:12px; display:none}
+.revealed.show{display:block}
+
+/* ── Graph interaction ── */
+.graph-area{border:1px solid var(--line); border-radius:10px; background:#fff; padding:18px; margin:16px 0}
+.graph-area h4{margin:0 0 12px; font-size:13px; font-weight:700; color:var(--ink)}
+.graph-controls{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px}
+.graph-controls .ctrl-group{display:flex; flex-direction:column; gap:4px}
+.graph-controls .ctrl-label{font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:700; color:var(--ink-faint)}
+.graph-controls .opts button{font-size:12px; padding:5px 12px}
+.graph-svg-wrap{display:flex; justify-content:center; margin:10px 0}
+.graph-svg-wrap svg{max-width:100%}
+.axis-select{display:flex; gap:10px; align-items:center; margin:8px 0; flex-wrap:wrap}
+.axis-select label{font-size:12px; font-weight:700; color:var(--ink-faint); min-width:50px}
+.axis-select select{font:inherit; font-size:12.5px; padding:5px 10px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink-soft); cursor:pointer}
+.axis-select select.correct{border-color:var(--ok); background:var(--ok-soft); color:var(--ok)}
+.axis-select select.incorrect{border-color:var(--no); background:var(--no-soft); color:var(--no)}
+
+/* Correlation table quiz */
+.cor-table{border-collapse:collapse; font-size:13px; margin:14px 0}
+.cor-table th,.cor-table td{border:1px solid var(--line); padding:8px 12px; text-align:center}
+.cor-table th{background:#f7f5f1; font-weight:700; font-size:12px}
+.cor-table td.highlight{background:var(--gold-soft); font-weight:700}
+
+/* Present mode nav */
+#pnav{display:flex; position:fixed; bottom:0; left:0; right:0; height:56px; z-index:200;
+  background:rgba(253,252,250,.94); backdrop-filter:blur(10px);
+  border-top:1px solid var(--line); align-items:center; justify-content:center; gap:16px; padding:0 20px}
+#pnav button{font:inherit; font-size:14px; font-weight:600; border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:7px; padding:8px 18px; cursor:pointer}
+#pnav button:hover{border-color:var(--ink-faint)}
+#pnav .prog{font-size:13px; color:var(--ink-faint); font-variant-numeric:tabular-nums; min-width:60px; text-align:center}
+#pprog{position:fixed; bottom:56px; left:0; right:0; height:3px; background:var(--line); z-index:201}
+#ppfill{height:100%; background:var(--accent); transition:width .3s; width:0}
+
+/* Responsive */
+@media(max-width:800px){
+  .wrap{padding:0 20px}
+  .cols{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<!-- Top bar -->
+<div id="bar">
+  <div class="brand">Module 4 · Correlation<small>Study Guide — Practice Problems</small></div>
+  <div class="spacer"></div>
+</div>
+
+<!-- Main content -->
+<div id="main">
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 1: Title -->
+<!-- ═══════════════════════════════════════ -->
+<section class="sec" data-title="Study Guide">
+<div class="wrap">
+  <div class="eyebrow">Statistics for Psychology · Module 4</div>
+  <h1>Correlation Study Guide</h1>
+  <p class="lede">Practice problems for the exam. Work through each section — the activities will tell you fast which parts you've actually got.</p>
+  <div class="cols">
+    <div class="card" style="border-left:3px solid var(--accent)">
+      <h4>What's here</h4>
+      <p>Practice identifying variables, writing hypotheses, interpreting output, language traps, reading correlation tables, APA write-ups, and 15 full practice problems with interactive graphs.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--teal)">
+      <h4>How to use it</h4>
+      <p>Try each question before revealing the answer. If you get it wrong, read the explanation, then come back and do it again from memory.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 2: Identify the Variables -->
+<!-- ═══════════════════════════════════════ -->
+<section class="sec" data-title="Practice: identify the variables">
+<div class="wrap">
+  <div class="eyebrow">Practice</div>
+  <h2>Identify the Variables</h2>
+  <p class="lede">Correlation has <strong>no IV and no DV</strong>. You're not manipulating anything — just measuring two things and asking how they move together. Both are simply called <strong>variables</strong>.</p>
+
+  <div class="key t">
+    <div class="lbl">The question to ask</div>
+    <p><strong>What two things were measured?</strong> Those are your variables. The sample (who was recruited) is not a variable.</p>
+  </div>
+
+  <div class="demo" id="varQuiz">
+    <header>Activity · Name the two variables <span class="hint">Pick, then check</span></header>
+    <div class="pad" id="varQs"></div>
+    <div class="scorebar-wrap">
+      <span>Correct</span> <b id="varScore">0</b> <span>/</span> <b id="varTotal">6</b>
+      <div class="sbar"><div class="sfill" id="varBar"></div></div>
+      <button class="btn sm" data-reset="var">Reset</button>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 3: Write the Hypotheses -->
+<!-- ═══════════════════════════════════════ -->
+<section class="sec" data-title="Practice: write the hypotheses">
+<div class="wrap">
+  <div class="eyebrow">Practice</div>
+  <h2>Write the Hypotheses</h2>
+  <p class="lede">Same George Costanza logic. Just do the opposite.</p>
+
+  <div class="cols">
+    <div class="card" style="border-left:3px solid var(--no)">
+      <h4>H<sub>0</sub> — Null</h4>
+      <p>There is <strong>no relationship</strong> between the two variables, <em>r</em> = 0.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--ok)">
+      <h4>H<sub>A</sub> — Alternative</h4>
+      <p>There <strong>is a relationship</strong> between the two variables, <em>r</em> ≠ 0.</p>
+    </div>
+  </div>
+
+  <div class="key">
+    <div class="lbl">Remember</div>
+    <p>You do <strong>not</strong> predict the direction (positive or negative) in the hypotheses. H<sub>A</sub> just says a relationship exists.</p>
+  </div>
+
+  <div class="demo" id="hypQuiz">
+    <header>Activity · Pick the correct hypotheses <span class="hint">Watch for causal language, direction, and IV/DV traps</span></header>
+    <div class="pad" id="hypQs"></div>
+    <div class="scorebar-wrap">
+      <span>Correct</span> <b id="hypScore">0</b> <span>/</span> <b id="hypTotal">6</b>
+      <div class="sbar"><div class="sfill" id="hypBar"></div></div>
+      <button class="btn sm" data-reset="hyp">Reset</button>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 4: Causal vs. Association Language -->
+<!-- ═══════════════════════════════════════ -->
+<section class="sec" data-title="Practice: causal vs. association verbs">
+<div class="wrap">
+  <div class="eyebrow">Practice</div>
+  <h2>Causal vs. Association Language</h2>
+  <p class="lede">Correlation tells you about <strong>relationships</strong> — never about <strong>cause and effect</strong>. One of the most common exam mistakes is using causal verbs in a correlation write-up.</p>
+
+  <div class="cols">
+    <div class="card no" style="border-left:3px solid var(--no)">
+      <h4>Causal Verbs — NEVER use for correlation</h4>
+      <p>caused, led to, improved, decreased, influenced, predicted, affected, produced, resulted in, made</p>
+    </div>
+    <div class="card ok" style="border-left:3px solid var(--ok)">
+      <h4>Association Verbs — CORRECT for correlation</h4>
+      <p>is related to, is associated with, is correlated with, tends to occur with, is linked to</p>
+    </div>
+  </div>
+
+  <div class="key g">
+    <div class="lbl">The test</div>
+    <p>If the verb implies that one variable <strong>did something</strong> to the other variable, it's causal and you can't use it for correlation.</p>
+  </div>
+
+  <div class="demo" id="verbQuiz">
+    <header>Activity · Causal or Association? <span class="hint">Classify each statement</span></header>
+    <div class="pad" id="verbQs"></div>
+    <div class="scorebar-wrap">
+      <span>Correct</span> <b id="verbScore">0</b> <span>/</span> <b id="verbTotal">10</b>
+      <div class="sbar"><div class="sfill" id="verbBar"></div></div>
+      <button class="btn sm" data-reset="verb">Reset</button>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 5: Interpret the Output -->
+<!-- ═══════════════════════════════════════ -->
+<section class="sec" data-title="Practice: interpret the output">
+<div class="wrap">
+  <div class="eyebrow">Practice</div>
+  <h2>Interpret the Output</h2>
+  <p class="lede">Three things every time: <strong>direction</strong>, <strong>strength</strong>, and <strong>significance</strong>.</p>
+
+  <div class="key b">
+    <div class="lbl">Step by step</div>
+    <p><strong>1. Direction</strong> — the sign of <em>r</em>. Positive = both go up. Negative = one up, one down.</p>
+    <p><strong>2. Strength</strong> — the absolute value of <em>r</em>, matched to the benchmarks (.00–.09 negligible, .10–.29 weak, .30–.49 moderate, .50–.69 strong, .70–.89 very strong, .90–1.00 extremely strong).</p>
+    <p><strong>3. Significance</strong> — is <em>p</em> < .05?</p>
+  </div>
+
+  <div class="demo" id="interpQuiz">
+    <header>Activity · Read the output <span class="hint">Each gives you an <em>r</em> and a <em>p</em></span></header>
+    <div class="pad" id="interpQs"></div>
+    <div class="scorebar-wrap">
+      <span>Correct</span> <b id="interpScore">0</b> <span>/</span> <b id="interpTotal">5</b>
+      <div class="sbar"><div class="sfill" id="interpBar"></div></div>
+      <button class="btn sm" data-reset="interp">Reset</button>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 6: Reading a Correlation Table -->
+<!-- ═══════════════════════════════════════ -->
+<section class="sec" data-title="Practice: reading a correlation table">
+<div class="wrap">
+  <div class="eyebrow">Practice</div>
+  <h2>Reading a Correlation Table</h2>
+  <p class="lede">Research articles often report correlation results in a <strong>matrix</strong> rather than one-at-a-time. Here's how to read one.</p>
+
+  <div class="key t">
+    <div class="lbl">Key facts</div>
+    <p><strong>The diagonal is always 1.00</strong> — every variable correlates perfectly with itself.</p>
+    <p><strong>The table is mirrored</strong> — the value above the diagonal is the same as below it, so only half is usually shown.</p>
+    <p><strong>Stars (*) mean significant</strong> — typically * = p < .05, ** = p < .01.</p>
+  </div>
+
+  <div style="overflow-x:auto; margin:20px 0">
+    <table class="cor-table" id="corTable">
+      <tr><th></th><th>1. Study hours</th><th>2. Sleep quality</th><th>3. Exam score</th><th>4. Stress</th></tr>
+      <tr><th>1. Study hours</th><td>—</td><td>.14</td><td>.52**</td><td>−.38**</td></tr>
+      <tr><th>2. Sleep quality</th><td></td><td>—</td><td>.31*</td><td>−.45**</td></tr>
+      <tr><th>3. Exam score</th><td></td><td></td><td>—</td><td>−.29*</td></tr>
+      <tr><th>4. Stress</th><td></td><td></td><td></td><td>—</td></tr>
+    </table>
+    <p style="font-size:12px; color:var(--ink-faint); margin-top:6px">* <em>p</em> < .05 &nbsp; ** <em>p</em> < .01</p>
+  </div>
+
+  <div class="demo" id="tableQuiz">
+    <header>Activity · Read the correlation table <span class="hint">Use the table above to answer</span></header>
+    <div class="pad" id="tableQs"></div>
+    <div class="scorebar-wrap">
+      <span>Correct</span> <b id="tableScore">0</b> <span>/</span> <b id="tableTotal">6</b>
+      <div class="sbar"><div class="sfill" id="tableBar"></div></div>
+      <button class="btn sm" data-reset="table">Reset</button>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 7: APA Write-Ups -->
+<!-- ═══════════════════════════════════════ -->
+<section class="sec" data-title="Practice: APA write-ups">
+<div class="wrap">
+  <div class="eyebrow">Practice</div>
+  <h2>APA Write-Ups</h2>
+  <p class="lede">Every correlation write-up follows the same template. Memorize it, then swap in the specifics.</p>
+
+  <div class="apa">
+    <header>Template</header>
+    <div class="body">A correlation analysis was conducted to examine the relationship between <em>[Variable 1]</em> and <em>[Variable 2]</em>. Results showed a statistically significant <em>[positive/negative]</em> relationship, <em>r</em> = <em>[value]</em>, <em>p</em> &lt; .05.</div>
+  </div>
+
+  <div class="key g">
+    <div class="lbl">Common mistakes</div>
+    <p><strong>Using causal language.</strong> Never say "effect," "caused," or "influenced." Say "relationship."</p>
+    <p><strong>Skipping the direction.</strong> Always state whether the relationship is positive or negative.</p>
+    <p><strong>Non-significant results.</strong> If <em>p</em> &gt; .05, write "Results showed a nonsignificant [direction] relationship" and use <em>p</em> &gt; .05 instead of <em>p</em> &lt; .05.</p>
+  </div>
+
+  <div class="demo" id="apaQuiz">
+    <header>Activity · Pick the correct APA write-up <span class="hint">Each option has a common mistake — find the one that doesn't</span></header>
+    <div class="pad" id="apaQs"></div>
+    <div class="scorebar-wrap">
+      <span>Correct</span> <b id="apaScore">0</b> <span>/</span> <b id="apaTotal">5</b>
+      <div class="sbar"><div class="sfill" id="apaBar"></div></div>
+      <button class="btn sm" data-reset="apa">Reset</button>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 8: Full Practice Problems (Original 5) -->
+<!-- ═══════════════════════════════════════ -->
+<section class="sec" data-title="Full practice problems (1–5)">
+<div class="wrap">
+  <div class="eyebrow">Putting it all together</div>
+  <h2>Full Practice Problems (1–5)</h2>
+  <p class="lede">Read the scenario and output. Then do all four steps: <strong>variables</strong>, <strong>hypotheses</strong>, <strong>interpretation</strong>, and <strong>APA write-up</strong>. Write your answers, then reveal.</p>
+  <div id="origProblems"></div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 9: Full Practice Problems (6–15) — Answer Key -->
+<!-- ═══════════════════════════════════════ -->
+<section class="sec" data-title="Full practice problems (6–15)">
+<div class="wrap">
+  <div class="eyebrow">More practice — with graphs</div>
+  <h2>Full Practice Problems (6–15)</h2>
+  <p class="lede">Same steps as before — plus now you'll <strong>pick the direction of the best-fit line</strong> and <strong>place the variables on the correct axes</strong>.</p>
+  <div id="akProblems"></div>
+</div>
+</section>
+
+</div><!-- end #main -->
+
+<!-- Present-mode nav -->
+<div id="pnav">
+  <button id="navBack">← Back</button>
+  <span class="prog" id="pcount"></span>
+  <button id="navNext">Next →</button>
+</div>
+<div id="pprog"><div id="ppfill"></div></div>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   QUIZ DATA
+   ═══════════════════════════════════════════════════ */
+
+const varData = [
+  {
+    scenario: "Researchers recruited 175 nurses to investigate whether perfectionism is related to burnout. Participants completed a perfectionism scale and a burnout inventory, with higher scores indicating greater levels of each.",
+    options: ["IV: Perfectionism. DV: Burnout.","Variable 1: Nurses. Variable 2: Perfectionism.","Variable 1: Perfectionism. Variable 2: Burnout.","Variable 1: Hospitals. Variable 2: Burnout inventory scores."],
+    correct: 2, explain: "The two things measured are perfectionism and burnout. \"Nurses\" is the sample, not a variable. And correlation has no IV or DV."
+  },
+  {
+    scenario: "A study examined the relationship between daily water intake and concentration ability. Researchers recruited 130 office workers who tracked their water consumption in liters and completed an attention task measuring concentration errors.",
+    options: ["Variable 1: Office workers. Variable 2: Water consumption.","Variable 1: Daily water intake. Variable 2: Concentration ability.","IV: Daily water intake. DV: Concentration errors.","Variable 1: 130 participants. Variable 2: Attention task."],
+    correct: 1, explain: "Daily water intake and concentration ability are the two measured constructs. \"Office workers\" and \"130 participants\" describe the sample."
+  },
+  {
+    scenario: "Researchers recruited 210 college athletes to study whether training hours per week are related to injury frequency over the course of a season.",
+    options: ["Variable 1: College athletes. Variable 2: The season.","Variable 1: Training hours per week. Variable 2: Injury frequency.","IV: Training hours. DV: Injury frequency.","Variable 1: 210 athletes. Variable 2: Training and injuries."],
+    correct: 1, explain: "Training hours per week and injury frequency are the two variables. \"College athletes\" is the sample. No IV/DV in correlation."
+  },
+  {
+    scenario: "Psychologists examined whether parental warmth is related to children's social competence. They recruited 95 families and administered a parental warmth questionnaire to parents and a social competence rating scale completed by teachers.",
+    options: ["Variable 1: Parents. Variable 2: Teachers.","Variable 1: 95 families. Variable 2: Social competence ratings.","Variable 1: Parental warmth. Variable 2: Children's social competence.","IV: Parental warmth. DV: Children's social competence."],
+    correct: 2, explain: "Parental warmth and children's social competence are what was measured. Parents and teachers are who filled out the forms — not the variables."
+  },
+  {
+    scenario: "A study explored the relationship between job autonomy and job satisfaction. Researchers surveyed 300 employees at a tech company using standardized measures for each construct.",
+    options: ["Variable 1: Employees. Variable 2: Tech company.","Variable 1: Job autonomy. Variable 2: Job satisfaction.","IV: Job autonomy. DV: Job satisfaction.","Variable 1: 300 employees. Variable 2: Standardized measures."],
+    correct: 1, explain: "Job autonomy and job satisfaction — the two constructs being measured."
+  },
+  {
+    scenario: "Researchers examined whether time spent in nature is related to perceived stress. They recruited 150 urban residents who reported their weekly hours outdoors in natural settings and completed a perceived stress scale.",
+    options: ["Variable 1: Urban residents. Variable 2: Natural settings.","IV: Weekly hours outdoors. DV: Perceived stress score.","Variable 1: Time spent in nature. Variable 2: Perceived stress.","Variable 1: 150 participants. Variable 2: Weekly hours outdoors."],
+    correct: 2, explain: "Time spent in nature and perceived stress are the two measured variables."
+  }
+];
+
+const hypData = [
+  {
+    scenario: "Researchers recruited 180 college students to examine whether time spent on social media is related to self-esteem.",
+    options: [
+      "H₀: Social media use has no effect on self-esteem.\nHₐ: Social media use decreases self-esteem.",
+      "H₀: There is no relationship between social media use and self-esteem.\nHₐ: There is a relationship between social media use and self-esteem.",
+      "H₀: There is no difference in self-esteem between social media users and non-users.\nHₐ: There is a difference.",
+      "H₀: There is a relationship between social media use and self-esteem.\nHₐ: There is no relationship."
+    ],
+    correct: 1, explain: "H₀ = no relationship, Hₐ = there is a relationship. Option A uses causal language (\"effect,\" \"decreases\"). Option C uses difference language (that's for a t-test). Option D flips null and alternative."
+  },
+  {
+    scenario: "A team of psychologists studied whether mindfulness practice is related to stress levels. They recruited 115 adults who completed measures of weekly mindfulness minutes and perceived stress.",
+    options: [
+      "H₀: Mindfulness practice reduces stress levels.\nHₐ: Mindfulness practice does not reduce stress levels.",
+      "H₀: There is no relationship between mindfulness practice and stress levels.\nHₐ: There is a negative relationship between mindfulness and stress.",
+      "H₀: There is no relationship between mindfulness practice and stress levels.\nHₐ: There is a relationship between mindfulness practice and stress levels.",
+      "H₀: There is no difference in stress between people who practice mindfulness and people who don't.\nHₐ: There is a difference."
+    ],
+    correct: 2, explain: "Hₐ says \"there is a relationship\" — it does NOT predict the direction. Option B predicts a negative direction. Option D uses group comparison language. Option A uses causal language and is backwards."
+  },
+  {
+    scenario: "Researchers investigated the relationship between sleep quality and academic performance. A sample of 200 undergraduate students completed a sleep quality index and provided their GPA.",
+    options: [
+      "H₀: Better sleep causes higher GPA.\nHₐ: Sleep quality does not affect GPA.",
+      "H₀: There is no relationship between sleep quality and academic performance.\nHₐ: Better sleep quality is associated with higher academic performance.",
+      "H₀: There is a relationship between sleep quality and academic performance.\nHₐ: There is no relationship.",
+      "H₀: There is no relationship between sleep quality and academic performance.\nHₐ: There is a relationship between sleep quality and academic performance."
+    ],
+    correct: 3, explain: "H₀ = no relationship, Hₐ = there is a relationship. Option A uses causal language. Option B predicts a direction. Option C flips them."
+  },
+  {
+    scenario: "A study examined whether hours of weekly physical activity are related to symptoms of depression. Researchers recruited 250 participants from a community health center.",
+    options: [
+      "H₀: Physical activity decreases depression symptoms.\nHₐ: Physical activity has no effect on depression symptoms.",
+      "H₀: There is no relationship between physical activity and depression symptoms.\nHₐ: Physical activity is negatively correlated with depression symptoms.",
+      "H₀: There is no difference between exercisers and non-exercisers.\nHₐ: Exercisers have fewer depression symptoms.",
+      "H₀: There is no relationship between physical activity and depression symptoms.\nHₐ: There is a relationship between physical activity and depression symptoms."
+    ],
+    correct: 3, explain: "No causal language, no predicted direction, no group comparison. Option B predicts negative. Option C uses groups. Option A is causal and backwards."
+  },
+  {
+    scenario: "Researchers recruited 142 undergraduate students to examine whether academic procrastination is related to academic anxiety.",
+    options: [
+      "H₀: Procrastination leads to academic anxiety.\nHₐ: Procrastination does not lead to academic anxiety.",
+      "H₀: There is no correlation between procrastination and anxiety, r = 0.\nHₐ: There is a positive correlation, r > 0.",
+      "H₀: Students who procrastinate have higher anxiety.\nHₐ: Students who procrastinate do not have higher anxiety.",
+      "H₀: There is no relationship between academic procrastination and academic anxiety.\nHₐ: There is a relationship between academic procrastination and academic anxiety."
+    ],
+    correct: 3, explain: "H₀ = no relationship, Hₐ = there is a relationship. Option A uses causal language. Option B predicts a positive direction. Option C uses group comparison language and is backwards."
+  },
+  {
+    scenario: "Researchers examined whether emotional stability is related to risk-taking tendencies. They recruited 98 adults who completed a personality inventory and a risk-taking questionnaire.",
+    options: [
+      "H₀: Emotional stability causes lower risk-taking.\nHₐ: Emotional stability does not cause lower risk-taking.",
+      "H₀: There is no relationship between emotional stability and risk-taking.\nHₐ: There is a relationship between emotional stability and risk-taking.",
+      "H₀: There is no relationship between emotional stability and risk-taking.\nHₐ: People with higher emotional stability take fewer risks.",
+      "H₀: Emotionally stable people differ from emotionally unstable people in risk-taking.\nHₐ: They do not differ."
+    ],
+    correct: 1, explain: "Option A is causal. Option C predicts a direction. Option D uses group comparison language and is backwards."
+  }
+];
+
+const verbData = [
+  { statement: "Study planning is related to exam performance.", answer: "association", explain: "\"Is related to\" is association language — correct for correlation." },
+  { statement: "Workplace interruptions decreased concentration.", answer: "causal", explain: "\"Decreased\" implies one variable did something to the other — causal language. Try: \"Higher interruptions tended to occur with lower concentration.\"" },
+  { statement: "Music listening improved creative confidence.", answer: "causal", explain: "\"Improved\" implies cause and effect. Try: \"Music listening was associated with creative confidence.\"" },
+  { statement: "Longer commutes tended to occur with lower life satisfaction.", answer: "association", explain: "\"Tended to occur with\" is association language — correct for correlation." },
+  { statement: "Peer support led to a stronger sense of belonging.", answer: "causal", explain: "\"Led to\" implies cause. Try: \"Peer support was positively correlated with belonging.\"" },
+  { statement: "Bedtime variability is associated with sleep quality.", answer: "association", explain: "\"Is associated with\" is association language — correct for correlation." },
+  { statement: "Volunteering increased civic trust in the community.", answer: "causal", explain: "\"Increased\" implies cause. Try: \"Volunteer hours were positively related to civic trust.\"" },
+  { statement: "Financial strain is correlated with job satisfaction.", answer: "association", explain: "\"Is correlated with\" is association language — correct for correlation." },
+  { statement: "Walking more caused better memory confidence.", answer: "causal", explain: "\"Caused\" is clearly causal language. Try: \"Walking time was related to memory confidence.\"" },
+  { statement: "Notification frequency is linked to task accuracy.", answer: "association", explain: "\"Is linked to\" is association language — correct for correlation." }
+];
+
+const interpData = [
+  {
+    r: ".416", p: ".00000025", sig: true, dir: "Positive", strength: "Moderate",
+    options: { dir: ["Positive","Negative","Zero"], str: ["Weak","Moderate","Strong","Very strong"], sig: ["Significant — reject the null","Not significant — fail to reject the null"] },
+    correctDir: 0, correctStr: 1, correctSig: 0, context: "Procrastination and academic anxiety",
+    explainDir: "The sign of r is positive (+.416).", explainStr: "|.416| falls in the .30–.49 range = moderate.", explainSig: "p < .05 — reject the null."
+  },
+  {
+    r: "−.318", p: ".0014", sig: true, dir: "Negative", strength: "Moderate",
+    options: { dir: ["Positive","Negative","Zero"], str: ["Weak","Moderate","Strong","Very strong"], sig: ["Significant — reject the null","Not significant — fail to reject the null"] },
+    correctDir: 1, correctStr: 1, correctSig: 0, context: "Emotional stability and risk-taking",
+    explainDir: "The sign of r is negative (−.318).", explainStr: "|−.318| = .318, in the .30–.49 range = moderate.", explainSig: "p < .05 — reject the null."
+  },
+  {
+    r: "−.185", p: ".085", sig: false, dir: "Negative", strength: "Weak",
+    options: { dir: ["Positive","Negative","Zero"], str: ["Negligible","Weak","Moderate","Strong"], sig: ["Significant — reject the null","Not significant — fail to reject the null"] },
+    correctDir: 1, correctStr: 1, correctSig: 1, context: "Optimism and test anxiety",
+    explainDir: "The sign of r is negative (−.185).", explainStr: "|−.185| = .185, in the .10–.29 range = weak.", explainSig: "p = .085 > .05 — fail to reject the null."
+  },
+  {
+    r: ".566", p: ".0000001", sig: true, dir: "Positive", strength: "Strong",
+    options: { dir: ["Positive","Negative","Zero"], str: ["Moderate","Strong","Very strong","Extremely strong"], sig: ["Significant — reject the null","Not significant — fail to reject the null"] },
+    correctDir: 0, correctStr: 1, correctSig: 0, context: "Music practice and performance ratings",
+    explainDir: "The sign of r is positive (+.566).", explainStr: ".566 falls in the .50–.69 range = strong.", explainSig: "p < .05 — reject the null."
+  },
+  {
+    r: ".088", p: ".29", sig: false, dir: "Positive", strength: "Negligible",
+    options: { dir: ["Positive","Negative","Zero"], str: ["Negligible","Weak","Moderate","Strong"], sig: ["Significant — reject the null","Not significant — fail to reject the null"] },
+    correctDir: 0, correctStr: 0, correctSig: 1, context: "Shoe size and exam scores",
+    explainDir: "The sign of r is positive (+.088), but essentially zero.", explainStr: ".088 falls in the .00–.09 range = negligible.", explainSig: "p = .29 > .05 — fail to reject the null."
+  }
+];
+
+const tableQuizData = [
+  {
+    q: "What is the correlation between study hours and exam score?",
+    options: [".14", ".52", "−.38", ".31"],
+    correct: 1, explain: "Row 1 (Study hours), Column 3 (Exam score) = .52**"
+  },
+  {
+    q: "Is the relationship between sleep quality and stress positive or negative?",
+    options: ["Positive", "Negative", "No relationship"],
+    correct: 1, explain: "The correlation between sleep quality and stress is −.45, which is negative. Higher sleep quality is associated with lower stress."
+  },
+  {
+    q: "Which pair of variables has the strongest correlation?",
+    options: ["Study hours & Exam score (.52)", "Sleep quality & Stress (−.45)", "Study hours & Sleep quality (.14)", "Study hours & Stress (−.38)"],
+    correct: 0, explain: "|.52| = .52 is the largest absolute value in the table, making it the strongest correlation."
+  },
+  {
+    q: "Is the correlation between study hours and sleep quality statistically significant?",
+    options: ["Yes — it has stars", "No — it has no stars"],
+    correct: 1, explain: "The value .14 has no asterisk, so it is not statistically significant (p > .05)."
+  },
+  {
+    q: "How would you describe the strength of the relationship between exam score and stress (r = −.29)?",
+    options: ["Negligible", "Weak", "Moderate", "Strong"],
+    correct: 1, explain: "|−.29| = .29, which falls in the .10–.29 range = weak."
+  },
+  {
+    q: "Why is the diagonal of a correlation table always 1.00 (or —)?",
+    options: ["It's a formatting convention","Every variable correlates perfectly with itself","Those cells are empty","It represents the maximum possible correlation"],
+    correct: 1, explain: "A variable correlated with itself always yields r = 1.00. The diagonal is often shown as — or 1.00."
+  }
+];
+
+const apaData = [
+  {
+    context: "Procrastination and academic anxiety", r: ".416", p: "< .05", dir: "positive", sig: true,
+    options: [
+      "A correlation analysis was conducted to examine the relationship between academic procrastination and academic anxiety. Results showed a statistically significant positive relationship, r = .416, p < .05.",
+      "A correlation analysis was conducted to examine the effect of academic procrastination on academic anxiety. Results showed a significant positive effect, r = .416, p < .05.",
+      "A correlation analysis was conducted to examine the relationship between academic procrastination and academic anxiety. Results showed a significant relationship, r = .416, p < .05.",
+      "A correlation analysis found that procrastination causes academic anxiety, r = .416, p = .00000025."
+    ],
+    correct: 0,
+    explains: [
+      "Correct. Relationship language, direction stated, r value, p < .05.",
+      "Uses causal language — \"effect of\" and \"effect was found.\"",
+      "Missing the direction (\"positive\" or \"negative\").",
+      "Uses causal language (\"causes\") and reports the exact p-value."
+    ]
+  },
+  {
+    context: "Emotional stability and risk-taking", r: "−.318", p: "< .05", dir: "negative", sig: true,
+    options: [
+      "A correlation analysis was conducted to examine the relationship between emotional stability and risk-taking. Results showed a significant relationship, r = −.318, p < .05.",
+      "A correlation analysis was conducted to examine the relationship between emotional stability and risk-taking. Results showed a statistically significant negative relationship, r = −.318, p < .05.",
+      "A correlation analysis found that emotional stability leads to lower risk-taking, r = −.318, p < .05.",
+      "A correlation analysis was conducted to examine the relationship between emotional stability and risk-taking. Results showed a significant negative relationship, r = −.318, p = .0014."
+    ],
+    correct: 1,
+    explains: [
+      "Missing the direction — doesn't say \"positive\" or \"negative.\"",
+      "Correct. Relationship language, negative direction stated, r value, p < .05.",
+      "Uses causal language — \"leads to.\"",
+      "Reports the exact p-value (.0014) instead of p < .05."
+    ]
+  },
+  {
+    context: "Optimism and test anxiety (NOT significant)", r: "−.185", p: "> .05", dir: "negative", sig: false,
+    options: [
+      "A correlation analysis was conducted to examine the relationship between optimism and test anxiety. Results showed a significant negative relationship, r = −.185, p < .05.",
+      "A correlation analysis was conducted to examine the relationship between optimism and test anxiety. No relationship was found.",
+      "A correlation analysis was conducted to examine the relationship between optimism and test anxiety. Results showed a nonsignificant negative relationship, r = −.185, p > .05.",
+      "A correlation analysis was conducted to examine the relationship between optimism and test anxiety. Results showed a nonsignificant relationship, r = −.185, p > .05."
+    ],
+    correct: 2,
+    explains: [
+      "Says \"significant\" and \"p < .05\" — but this result is NOT significant.",
+      "Too vague. You still need to report r, p, and direction.",
+      "Correct. Says \"non-significant,\" includes the direction, uses p > .05.",
+      "Missing the direction (\"negative\")."
+    ]
+  },
+  {
+    context: "Music practice and performance ratings", r: ".566", p: "< .05", dir: "positive", sig: true,
+    options: [
+      "A correlation analysis was conducted to examine the relationship between music practice and performance ratings. Results showed a statistically significant positive relationship, r = .566, p < .05.",
+      "Music practice was found to significantly improve performance ratings, r = .566, p < .05.",
+      "A correlation analysis was conducted to examine the relationship between music practice and performance ratings. Results showed a positive relationship, r = .566, p < .05.",
+      "A correlation analysis was conducted. Results show r = .566."
+    ],
+    correct: 0,
+    explains: [
+      "Correct. Names both variables, states direction and significance, includes r and p.",
+      "Uses causal language — \"improve.\"",
+      "Missing \"significant.\"",
+      "Doesn't name the variables, doesn't state direction or significance, missing p value."
+    ]
+  },
+  {
+    context: "Loneliness and daily phone screen time", r: ".311", p: "< .05", dir: "positive", sig: true,
+    options: [
+      "A correlation analysis was conducted to examine the relationship between loneliness and screen time. Results showed a statistically significant positive relationship, r = .311, p < .05.",
+      "Loneliness significantly predicted higher screen time, r = .311, p < .05.",
+      "A correlation analysis was conducted to examine the relationship between loneliness and daily phone screen time. Results showed a statistically significant positive relationship, r = .311, p < .05.",
+      "A correlation analysis was conducted to examine the difference in screen time between lonely and non-lonely individuals. Results showed a significant positive difference, r = .311, p < .05."
+    ],
+    correct: 2,
+    explains: [
+      "Uses abbreviated variable name — says \"screen time\" instead of \"daily phone screen time.\"",
+      "Uses prediction language (\"predicted\").",
+      "Correct. Names both variables fully, states direction and significance, includes r and p.",
+      "Uses \"difference\" language — that's for a t-test."
+    ]
+  }
+];
+
+/* ═══════════════════════════════════════════════════
+   ORIGINAL 5 PRACTICE PROBLEMS
+   ═══════════════════════════════════════════════════ */
+
+const origProblems = [
+  {
+    id: "fp1", title: "Problem 1",
+    scenario: "Academic procrastination is a common behavior among college students and is often associated with difficulties managing academic responsibilities. In the present study, researchers recruited 142 undergraduate students from a midsized university. Participants completed two standardized questionnaires measuring academic procrastination and academic anxiety, with higher scores indicating greater levels of each construct.",
+    output: "Pearson's product-moment correlation\n\ndata: procrastination and academic_anxiety\n\nt = 5.42, df = 140, p-value = 0.00000025\n\nalternative hypothesis:\ntrue correlation is not equal to 0\n\nsample estimates:\n      cor\n    0.416",
+    answers: {
+      variables: "Academic procrastination and academic anxiety.",
+      h0: "There is no relationship between academic procrastination and academic anxiety.",
+      ha: "There is a relationship between academic procrastination and academic anxiety.",
+      direction: "Positive — the sign of r is positive. As procrastination increases, anxiety tends to increase.",
+      strength: "Moderate — |.416| falls in the .30–.49 range.",
+      significant: "Yes — p < .05.",
+      apa: "A correlation analysis was conducted to examine the relationship between academic procrastination and academic anxiety. Results showed a statistically significant positive relationship, r = .416, p < .05."
+    }, sig: true
+  },
+  {
+    id: "fp2", title: "Problem 2",
+    scenario: "Personality traits have long been studied as potential predictors of individual differences in decision-making and behavior. In the present study, researchers recruited 98 adults between the ages of 18 and 65. Participants completed a standardized personality inventory measuring emotional stability and a questionnaire assessing general risk-taking tendencies. Higher scores indicated greater emotional stability and greater willingness to engage in risky behaviors.",
+    output: "Pearson's product-moment correlation\n\ndata: emotional_stability and risk_taking\n\nt = -3.28, df = 96, p-value = 0.0014\n\nalternative hypothesis:\ntrue correlation is not equal to 0\n\nsample estimates:\n      cor\n   -0.318",
+    answers: {
+      variables: "Emotional stability and risk-taking tendencies.",
+      h0: "There is no relationship between emotional stability and risk-taking.",
+      ha: "There is a relationship between emotional stability and risk-taking.",
+      direction: "Negative — the sign of r is negative. As emotional stability increases, risk-taking tends to decrease.",
+      strength: "Moderate — |−.318| = .318, which falls in the .30–.49 range.",
+      significant: "Yes — p < .05.",
+      apa: "A correlation analysis was conducted to examine the relationship between emotional stability and risk-taking. Results showed a statistically significant negative relationship, r = −.318, p < .05."
+    }, sig: true
+  },
+  {
+    id: "fp3", title: "Problem 3",
+    scenario: "Researchers explored whether dispositional optimism is related to test anxiety among college students. They recruited 88 students who completed an optimism scale and a test anxiety inventory, with higher scores indicating greater levels of each construct.",
+    output: "Pearson's product-moment correlation\n\ndata: optimism and test_anxiety\n\nt = -1.74, df = 86, p-value = 0.085\n\nalternative hypothesis:\ntrue correlation is not equal to 0\n\nsample estimates:\n      cor\n   -0.185",
+    answers: {
+      variables: "Optimism and test anxiety.",
+      h0: "There is no relationship between optimism and test anxiety.",
+      ha: "There is a relationship between optimism and test anxiety.",
+      direction: "Negative — the sign of r is negative. But since this is not significant, we can't say the relationship is real.",
+      strength: "Weak — |−.185| = .185, which falls in the .10–.29 range.",
+      significant: "No — p = .085, which is > .05.",
+      apa: "A correlation analysis was conducted to examine the relationship between optimism and test anxiety. Results showed a nonsignificant negative relationship, r = −.185, p > .05."
+    }, sig: false
+  },
+  {
+    id: "fp4", title: "Problem 4",
+    scenario: "Researchers examined whether weekly hours of music practice are related to performance ratings among student musicians. They recruited 74 students from a university music program. Practice hours were self-reported, and performance was rated by a panel of judges on a 100-point scale.",
+    output: "Pearson's product-moment correlation\n\ndata: practice_hours and performance_rating\n\nt = 5.83, df = 72, p-value = 0.0000001\n\nalternative hypothesis:\ntrue correlation is not equal to 0\n\nsample estimates:\n      cor\n    0.566",
+    answers: {
+      variables: "Weekly hours of music practice and performance ratings.",
+      h0: "There is no relationship between music practice and performance ratings.",
+      ha: "There is a relationship between music practice and performance ratings.",
+      direction: "Positive — the sign of r is positive. As practice hours increase, performance ratings tend to increase.",
+      strength: "Strong — .566 falls in the .50–.69 range.",
+      significant: "Yes — p < .05.",
+      apa: "A correlation analysis was conducted to examine the relationship between weekly music practice hours and performance ratings. Results showed a statistically significant positive relationship, r = .566, p < .05."
+    }, sig: true
+  },
+  {
+    id: "fp5", title: "Problem 5",
+    scenario: "Researchers investigated whether loneliness is related to daily phone screen time among young adults. They recruited 165 participants who completed a loneliness questionnaire and reported their average daily screen time in hours. Higher scores on the loneliness measure indicated greater loneliness.",
+    output: "Pearson's product-moment correlation\n\ndata: loneliness and screen_time\n\nt = 4.18, df = 163, p-value = 0.000048\n\nalternative hypothesis:\ntrue correlation is not equal to 0\n\nsample estimates:\n      cor\n    0.311",
+    answers: {
+      variables: "Loneliness and daily phone screen time.",
+      h0: "There is no relationship between loneliness and daily phone screen time.",
+      ha: "There is a relationship between loneliness and daily phone screen time.",
+      direction: "Positive — the sign of r is positive. As loneliness increases, screen time tends to increase.",
+      strength: "Moderate — .311 falls in the .30–.49 range.",
+      significant: "Yes — p < .05.",
+      apa: "A correlation analysis was conducted to examine the relationship between loneliness and daily phone screen time. Results showed a statistically significant positive relationship, r = .311, p < .05."
+    }, sig: true
+  }
+];
+
+/* ═══════════════════════════════════════════════════
+   ANSWER KEY PRACTICE PROBLEMS (10) WITH GRAPH DATA
+   ═══════════════════════════════════════════════════ */
+
+const akProblems = [
+  {
+    id: "ak1", title: "Problem 6", v1: "Study planning", v2: "Exam performance",
+    scenario: "A college learning center examines how students organize their preparation for a cumulative exam. Researchers recruit 84 undergraduates. Each completes a study planning scale from 0 to 40, with higher scores indicating more organized planning, and takes an exam scored from 0 to 100. Both measures are collected during the same exam period.",
+    output: "Pearson's product-moment correlation\ndata: study_planning and exam_performance\nt = 6.4474, df = 82, p-value = 7.39e-09\nalternative hypothesis: true correlation is not equal to 0\nsample estimates:\n      cor\n    0.580",
+    r: ".58", rdf: "r(82) = .58", p: "< .001", dir: "positive", sig: true, decision: "Reject H₀.",
+    apa: "A correlation analysis was conducted to examine the relationship between study planning and exam performance. Results showed a statistically significant positive relationship, r(82) = .58, p < .001.",
+    plain: "Students who planned their studying more tended to do better on the exam.",
+    graphDir: "positive"
+  },
+  {
+    id: "ak2", title: "Problem 7", v1: "Workplace interruptions", v2: "Concentration",
+    scenario: "Researchers investigate attention during office work in 96 employees. Each employee records the number of interruptions during a typical workday and completes a concentration scale from 0 to 50 that afternoon. Higher concentration scores indicate better sustained attention.",
+    output: "Pearson's product-moment correlation\ndata: workplace_interruptions and concentration\nt = -5.0228, df = 94, p-value = 2.42e-06\nalternative hypothesis: true correlation is not equal to 0\nsample estimates:\n      cor\n   -0.460",
+    r: "−.46", rdf: "r(94) = −.46", p: "< .001", dir: "negative", sig: true, decision: "Reject H₀.",
+    apa: "A correlation analysis was conducted to examine the relationship between workplace interruptions and concentration. Results showed a statistically significant negative relationship, r(94) = −.46, p < .001.",
+    plain: "Employees who were interrupted more during the workday tended to have lower concentration.",
+    graphDir: "negative"
+  },
+  {
+    id: "ak3", title: "Problem 8", v1: "Music listening", v2: "Creative confidence",
+    scenario: "An arts education team recruits 48 adults to explore everyday music habits and confidence in generating ideas. Participants report their average daily music listening in minutes and complete a creative confidence scale from 0 to 60. Higher scale scores indicate greater confidence.",
+    output: "Pearson's product-moment correlation\ndata: music_listening and creative_confidence\nt = 0.8198, df = 46, p-value = 0.417\nalternative hypothesis: true correlation is not equal to 0\nsample estimates:\n      cor\n    0.120",
+    r: ".12", rdf: "r(46) = .12", p: "= .417", dir: "positive", sig: false, decision: "Fail to reject H₀.",
+    apa: "A correlation analysis was conducted to examine the relationship between music listening and creative confidence. Results showed a nonsignificant positive relationship, r(46) = .12, p = .417.",
+    plain: "There was no significant relationship between how much music people listened to and their creative confidence.",
+    graphDir: "positive"
+  },
+  {
+    id: "ak4", title: "Problem 9", v1: "Commute duration", v2: "Life satisfaction",
+    scenario: "An urban research team studies 55 employed adults who commute regularly. Participants report their average one-way commute duration in minutes and complete a life satisfaction scale from 0 to 35. Higher scale scores indicate greater satisfaction.",
+    output: "Pearson's product-moment correlation\ndata: commute_duration and life_satisfaction\nt = -1.1800, df = 53, p-value = 0.243\nalternative hypothesis: true correlation is not equal to 0\nsample estimates:\n      cor\n   -0.160",
+    r: "−.16", rdf: "r(53) = −.16", p: "= .243", dir: "negative", sig: false, decision: "Fail to reject H₀.",
+    apa: "A correlation analysis was conducted to examine the relationship between commute duration and life satisfaction. Results showed a nonsignificant negative relationship, r(53) = −.16, p = .243.",
+    plain: "There was no significant relationship between how long people's commutes were and how satisfied they were with their lives.",
+    graphDir: "negative"
+  },
+  {
+    id: "ak5", title: "Problem 10", v1: "Peer support", v2: "Belonging",
+    scenario: "A university surveys 120 first-year students near the end of their first semester. Students complete separate peer support and campus belonging scales, each scored from 0 to 50. Higher scores indicate more perceived support and a stronger sense of belonging, respectively.",
+    output: "Pearson's product-moment correlation\ndata: peer_support and belonging\nt = 9.8039, df = 118, p-value = 5.85e-17\nalternative hypothesis: true correlation is not equal to 0\nsample estimates:\n      cor\n    0.670",
+    r: ".67", rdf: "r(118) = .67", p: "< .001", dir: "positive", sig: true, decision: "Reject H₀.",
+    apa: "A correlation analysis was conducted to examine the relationship between peer support and belonging. Results showed a statistically significant positive relationship, r(118) = .67, p < .001.",
+    plain: "First-year students who felt more supported by their peers also tended to feel a stronger sense of belonging on campus.",
+    graphDir: "positive"
+  },
+  {
+    id: "ak6", title: "Problem 11", v1: "Bedtime variability", v2: "Sleep quality",
+    scenario: "A sleep research team recruits 72 adults who keep bedtime diaries for two weeks. Researchers calculate each person's bedtime variability as the standard deviation of bedtime in minutes. Participants also complete a sleep quality scale from 0 to 30, with higher scores indicating better sleep.",
+    output: "Pearson's product-moment correlation\ndata: bedtime_variability and sleep_quality\nt = -6.6114, df = 70, p-value = 6.33e-09\nalternative hypothesis: true correlation is not equal to 0\nsample estimates:\n      cor\n   -0.620",
+    r: "−.62", rdf: "r(70) = −.62", p: "< .001", dir: "negative", sig: true, decision: "Reject H₀.",
+    apa: "A correlation analysis was conducted to examine the relationship between bedtime variability and sleep quality. Results showed a statistically significant negative relationship, r(70) = −.62, p < .001.",
+    plain: "People whose bedtimes varied more from night to night tended to report worse sleep quality.",
+    graphDir: "negative"
+  },
+  {
+    id: "ak7", title: "Problem 12", v1: "Volunteer hours", v2: "Civic trust",
+    scenario: "A community research group surveys 90 residents about their participation in local activities. Residents report the number of volunteer hours completed in the past month and complete a civic trust scale from 0 to 40. Higher scale scores indicate greater trust in local institutions.",
+    output: "Pearson's product-moment correlation\ndata: volunteer_hours and civic_trust\nt = 2.4221, df = 88, p-value = 0.017\nalternative hypothesis: true correlation is not equal to 0\nsample estimates:\n      cor\n    0.250",
+    r: ".25", rdf: "r(88) = .25", p: "= .017", dir: "positive", sig: true, decision: "Reject H₀.",
+    apa: "A correlation analysis was conducted to examine the relationship between volunteer hours and civic trust. Results showed a statistically significant positive relationship, r(88) = .25, p = .017.",
+    plain: "People who volunteered more hours tended to have more trust in their local community.",
+    graphDir: "positive"
+  },
+  {
+    id: "ak8", title: "Problem 13", v1: "Financial strain", v2: "Job satisfaction",
+    scenario: "Researchers studying employee well-being survey 110 employed adults. Participants complete a financial strain scale from 0 to 40 and a job satisfaction scale from 0 to 50. Higher scores indicate greater financial strain and greater satisfaction, respectively.",
+    output: "Pearson's product-moment correlation\ndata: financial_strain and job_satisfaction\nt = -3.0311, df = 108, p-value = 0.003\nalternative hypothesis: true correlation is not equal to 0\nsample estimates:\n      cor\n   -0.280",
+    r: "−.28", rdf: "r(108) = −.28", p: "= .003", dir: "negative", sig: true, decision: "Reject H₀.",
+    apa: "A correlation analysis was conducted to examine the relationship between financial strain and job satisfaction. Results showed a statistically significant negative relationship, r(108) = −.28, p = .003.",
+    plain: "People who reported more financial strain tended to be less satisfied with their jobs.",
+    graphDir: "negative"
+  },
+  {
+    id: "ak9", title: "Problem 14", v1: "Walking time", v2: "Memory confidence",
+    scenario: "A healthy aging research team recruits 64 adults aged 60 to 75. Participants report their average daily walking time in minutes and complete a memory confidence scale from 0 to 50. Higher scores indicate greater confidence in everyday memory.",
+    output: "Pearson's product-moment correlation\ndata: walking_time and memory_confidence\nt = 0.6319, df = 62, p-value = 0.530\nalternative hypothesis: true correlation is not equal to 0\nsample estimates:\n      cor\n    0.080",
+    r: ".08", rdf: "r(62) = .08", p: "= .530", dir: "positive", sig: false, decision: "Fail to reject H₀.",
+    apa: "A correlation analysis was conducted to examine the relationship between walking time and memory confidence. Results showed a nonsignificant positive relationship, r(62) = .08, p = .530.",
+    plain: "There was no significant relationship between how much people walked and how confident they felt about their memory.",
+    graphDir: "positive"
+  },
+  {
+    id: "ak10", title: "Problem 15", v1: "Notification frequency", v2: "Task accuracy",
+    scenario: "A digital work research team observes 80 adults completing a routine computer task. Software records the number of notifications received during the session and the percentage of task items answered correctly. Higher accuracy values indicate better performance.",
+    output: "Pearson's product-moment correlation\ndata: notification_frequency and task_accuracy\nt = -0.7981, df = 78, p-value = 0.427\nalternative hypothesis: true correlation is not equal to 0\nsample estimates:\n      cor\n   -0.090",
+    r: "−.09", rdf: "r(78) = −.09", p: "= .427", dir: "negative", sig: false, decision: "Fail to reject H₀.",
+    apa: "A correlation analysis was conducted to examine the relationship between notification frequency and task accuracy. Results showed a nonsignificant negative relationship, r(78) = −.09, p = .427.",
+    plain: "There was no significant relationship between how many notifications people received and how accurately they completed the task.",
+    graphDir: "negative"
+  }
+];
+
+/* ═══════════════════════════════════════════════════
+   QUIZ ENGINE
+   ═══════════════════════════════════════════════════ */
+
+const quizState = { var:{score:0,done:0}, hyp:{score:0,done:0}, interp:{score:0,done:0}, apa:{score:0,done:0}, verb:{score:0,done:0}, table:{score:0,done:0} };
+
+function buildVarQuiz() {
+  const c = document.getElementById('varQs'); c.innerHTML = '';
+  varData.forEach((q, i) => {
+    const div = document.createElement('div'); div.className = 'q-item';
+    div.innerHTML = `<p class="q-text"><span class="num">${i+1}.</span>${q.scenario}</p>
+      <div class="opts" id="var-opts-${i}">${q.options.map((o,j) => `<button data-mc="var" data-qi="${i}" data-oi="${j}">${o}</button>`).join('')}</div>
+      <div class="fb" id="var-fb-${i}"></div>`;
+    c.appendChild(div);
+  });
+  document.getElementById('varTotal').textContent = varData.length;
+}
+
+function buildHypQuiz() {
+  const c = document.getElementById('hypQs'); c.innerHTML = '';
+  hypData.forEach((q, i) => {
+    const div = document.createElement('div'); div.className = 'q-item';
+    div.innerHTML = `<p class="q-text"><span class="num">${i+1}.</span>${q.scenario}</p>
+      <div class="opts" id="hyp-opts-${i}" style="flex-direction:column;align-items:stretch">${q.options.map((o,j) => `<button data-mc="hyp" data-qi="${i}" data-oi="${j}" style="text-align:left;border-radius:8px;padding:10px 14px;white-space:pre-line">${o}</button>`).join('')}</div>
+      <div class="fb" id="hyp-fb-${i}"></div>`;
+    c.appendChild(div);
+  });
+  document.getElementById('hypTotal').textContent = hypData.length;
+}
+
+function buildVerbQuiz() {
+  const c = document.getElementById('verbQs'); c.innerHTML = '';
+  verbData.forEach((q, i) => {
+    const div = document.createElement('div'); div.className = 'q-item';
+    div.innerHTML = `<p class="q-text"><span class="num">${i+1}.</span>"${q.statement}"</p>
+      <div class="opts" id="verb-opts-${i}">
+        <button data-verb="${i}" data-choice="causal">🚫 Causal</button>
+        <button data-verb="${i}" data-choice="association">✓ Association</button>
+      </div>
+      <div class="fb" id="verb-fb-${i}"></div>`;
+    c.appendChild(div);
+  });
+  document.getElementById('verbTotal').textContent = verbData.length;
+}
+
+function checkVerb(qi, choice) {
+  const btns = document.querySelectorAll(`#verb-opts-${qi} button`);
+  const fb = document.getElementById(`verb-fb-${qi}`);
+  const correct = verbData[qi].answer;
+  btns.forEach(b => { b.disabled = true; });
+  if (choice === correct) {
+    btns.forEach(b => { if ((choice==='causal' && b.textContent.includes('Causal')) || (choice==='association' && b.textContent.includes('Association'))) b.classList.add('right'); });
+    fb.className = 'fb show y'; fb.textContent = '✓ Correct. ' + verbData[qi].explain;
+    quizState.verb.score++;
+  } else {
+    btns.forEach(b => { if ((correct==='causal' && b.textContent.includes('Causal')) || (correct==='association' && b.textContent.includes('Association'))) b.classList.add('right'); });
+    btns.forEach(b => { if ((choice==='causal' && b.textContent.includes('Causal')) || (choice==='association' && b.textContent.includes('Association'))) b.classList.add('wrong'); });
+    fb.className = 'fb show n'; fb.textContent = '✗ Not quite. ' + verbData[qi].explain;
+  }
+  quizState.verb.done++;
+  document.getElementById('verbScore').textContent = quizState.verb.score;
+  document.getElementById('verbBar').style.width = (quizState.verb.score / verbData.length * 100) + '%';
+}
+
+function buildTableQuiz() {
+  const c = document.getElementById('tableQs'); c.innerHTML = '';
+  tableQuizData.forEach((q, i) => {
+    const div = document.createElement('div'); div.className = 'q-item';
+    div.innerHTML = `<p class="q-text"><span class="num">${i+1}.</span>${q.q}</p>
+      <div class="opts" id="table-opts-${i}">${q.options.map((o,j) => `<button data-mc="table" data-qi="${i}" data-oi="${j}">${o}</button>`).join('')}</div>
+      <div class="fb" id="table-fb-${i}"></div>`;
+    c.appendChild(div);
+  });
+  document.getElementById('tableTotal').textContent = tableQuizData.length;
+}
+
+function buildInterpQuiz() {
+  const c = document.getElementById('interpQs'); c.innerHTML = '';
+  interpData.forEach((q, i) => {
+    const div = document.createElement('div'); div.className = 'q-item';
+    div.innerHTML = `
+      <p class="q-text"><span class="num">${i+1}.</span><strong>${q.context}</strong></p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px">
+        <span style="font-size:14px;color:var(--ink-faint)"><em>r</em> = ${q.r}</span>
+        <span style="font-size:14px;color:var(--ink-faint)"><em>p</em> = ${q.p}</span>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+        <div>
+          <label style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--ink-faint);display:block;margin-bottom:4px">Direction</label>
+          <div class="opts" id="interp-dir-${i}">${q.options.dir.map((o,j) => `<button data-interp="${i}" data-itype="dir" data-oi="${j}">${o}</button>`).join('')}</div>
+        </div>
+        <div>
+          <label style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--ink-faint);display:block;margin-bottom:4px">Strength</label>
+          <div class="opts" id="interp-str-${i}">${q.options.str.map((o,j) => `<button data-interp="${i}" data-itype="str" data-oi="${j}">${o}</button>`).join('')}</div>
+        </div>
+        <div>
+          <label style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--ink-faint);display:block;margin-bottom:4px">Significance</label>
+          <div class="opts" id="interp-sig-${i}" style="flex-direction:column">${q.options.sig.map((o,j) => `<button data-interp="${i}" data-itype="sig" data-oi="${j}" style="text-align:left">${o}</button>`).join('')}</div>
+        </div>
+      </div>
+      <div class="fb" id="interp-fb-dir-${i}"></div>
+      <div class="fb" id="interp-fb-str-${i}"></div>
+      <div class="fb" id="interp-fb-sig-${i}"></div>`;
+    c.appendChild(div);
+  });
+  document.getElementById('interpTotal').textContent = interpData.length;
+}
+
+const interpAnswered = {};
+function checkInterp(qi, type, oi) {
+  const key = `${qi}-${type}`;
+  if (interpAnswered[key]) return;
+  interpAnswered[key] = true;
+  const correctKey = type==='dir'?'correctDir':type==='str'?'correctStr':'correctSig';
+  const explainKey = type==='dir'?'explainDir':type==='str'?'explainStr':'explainSig';
+  const correct = interpData[qi][correctKey];
+  const btns = document.querySelectorAll(`#interp-${type}-${qi} button`);
+  const fb = document.getElementById(`interp-fb-${type}-${qi}`);
+  btns.forEach((b,j) => { b.disabled=true; if(j===correct) b.classList.add('right'); else if(j===oi&&oi!==correct) b.classList.add('wrong'); });
+  if (oi===correct) { fb.className='fb show y'; fb.textContent='✓ '+interpData[qi][explainKey]; quizState.interp.score++; }
+  else { fb.className='fb show n'; fb.textContent='✗ '+interpData[qi][explainKey]; }
+  document.getElementById('interpScore').textContent = Math.floor(quizState.interp.score / 3);
+  document.getElementById('interpBar').style.width = (quizState.interp.score / (interpData.length * 3) * 100) + '%';
+}
+
+function buildApaQuiz() {
+  const c = document.getElementById('apaQs'); c.innerHTML = '';
+  apaData.forEach((q, i) => {
+    const div = document.createElement('div'); div.className = 'q-item';
+    div.innerHTML = `<p class="q-text"><span class="num">${i+1}.</span><strong>${q.context}</strong><br>
+      <span style="font-size:14px;color:var(--ink-faint)"><em>r</em> = ${q.r}, <em>p</em> ${q.p}</span></p>
+      <div class="opts" id="apa-opts-${i}" style="flex-direction:column;align-items:stretch">${q.options.map((o,j) => `<button data-mc="apa" data-qi="${i}" data-oi="${j}" style="text-align:left;border-radius:8px;padding:10px 14px;font-size:13px;line-height:1.5">${o}</button>`).join('')}</div>
+      <div class="fb" id="apa-fb-${i}"></div>`;
+    c.appendChild(div);
+  });
+  document.getElementById('apaTotal').textContent = apaData.length;
+}
+
+/* Generic MC checker for var, hyp, apa, table */
+function checkMC(type, qi, oi) {
+  const data = type==='var'?varData:type==='hyp'?hypData:type==='apa'?apaData:tableQuizData;
+  const btns = document.querySelectorAll(`#${type}-opts-${qi} button`);
+  const fb = document.getElementById(`${type}-fb-${qi}`);
+  const correct = data[qi].correct;
+  btns.forEach((b,j) => { b.disabled=true; if(j===correct) b.classList.add('right'); else if(j===oi&&oi!==correct) b.classList.add('wrong'); });
+  if (oi === correct) {
+    fb.className='fb show y';
+    fb.textContent='✓ Correct. '+(data[qi].explain || data[qi].explains?.[oi] || '');
+    quizState[type].score++;
+  } else {
+    fb.className='fb show n';
+    let msg = '✗ Not quite. '+(data[qi].explain || data[qi].explains?.[oi] || '');
+    if (data[qi].explains) msg += ' The correct answer: '+data[qi].explains[correct];
+    fb.innerHTML = msg;
+  }
+  quizState[type].done++;
+  document.getElementById(type+'Score').textContent = quizState[type].score;
+  const total = data.length;
+  document.getElementById(type+'Bar').style.width = (quizState[type].score / total * 100) + '%';
+}
+
+function resetQuiz(type) {
+  quizState[type] = {score:0,done:0};
+  document.getElementById(type+'Score').textContent = '0';
+  document.getElementById(type+'Bar').style.width = '0';
+  if (type==='var') buildVarQuiz();
+  if (type==='hyp') buildHypQuiz();
+  if (type==='verb') buildVerbQuiz();
+  if (type==='interp') { Object.keys(interpAnswered).forEach(k=>delete interpAnswered[k]); buildInterpQuiz(); }
+  if (type==='apa') buildApaQuiz();
+  if (type==='table') buildTableQuiz();
+}
+
+/* ═══════════════════════════════════════════════════
+   ORIGINAL PRACTICE PROBLEMS (1–5) — fill-in + reveal
+   ═══════════════════════════════════════════════════ */
+
+function buildOrigProblems() {
+  const c = document.getElementById('origProblems'); c.innerHTML = '';
+  origProblems.forEach(prob => {
+    const div = document.createElement('div'); div.className = 'practice-item'; div.id = prob.id;
+    div.innerHTML = `
+      <h3>${prob.title}</h3>
+      <div class="scenario"><div class="slabel">Scenario</div><p>${prob.scenario}</p></div>
+      <div class="output">${prob.output}</div>
+      <p style="font-size:14px;color:var(--ink-faint);margin:16px 0 6px">Write your answers, then check:</p>
+      <div class="answer-row"><label>Variables:</label><textarea placeholder="What two things were measured?"></textarea></div>
+      <div class="answer-row"><label>H₀:</label><textarea placeholder="Write the null hypothesis..."></textarea></div>
+      <div class="answer-row"><label>Hₐ:</label><textarea placeholder="Write the alternative hypothesis..."></textarea></div>
+      <div class="answer-row"><label>Direction:</label><textarea placeholder="Positive or negative?"></textarea></div>
+      <div class="answer-row"><label>Strength:</label><textarea placeholder="Use the benchmarks..."></textarea></div>
+      <div class="answer-row"><label>Significant?</label><textarea placeholder="Yes or no, and why?"></textarea></div>
+      <div class="answer-row"><label>APA write-up:</label><textarea placeholder="Write the full APA result..." style="min-height:90px"></textarea></div>
+      <button class="reveal-btn" data-reveal="${prob.id}">Reveal Answers</button>
+      <div class="revealed" id="${prob.id}-answer">
+        <div class="card ${prob.sig?'ok':'no'}" style="margin-top:10px">
+          <h4>Answers${prob.sig?'':' — this one is NOT significant'}</h4>
+          <p><strong>Variables:</strong> ${prob.answers.variables}</p>
+          <p><strong>H₀:</strong> ${prob.answers.h0}</p>
+          <p><strong>Hₐ:</strong> ${prob.answers.ha}</p>
+          <p><strong>Direction:</strong> ${prob.answers.direction}</p>
+          <p><strong>Strength:</strong> ${prob.answers.strength}</p>
+          <p><strong>Significant?</strong> ${prob.answers.significant}</p>
+        </div>
+        <div class="apa" style="margin-top:10px">
+          <header>Model APA Write-Up</header>
+          <div class="body">${prob.answers.apa.replace(/r = /g,'<em>r</em> = ').replace(/p [<>] .05/g,m=>'<em>p</em> '+m.slice(2))}</div>
+        </div>
+      </div>`;
+    c.appendChild(div);
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   ANSWER KEY PRACTICE PROBLEMS (6–15) — with graphs
+   ═══════════════════════════════════════════════════ */
+
+function drawSVG(containerId, v1, v2, showLine, lineDir) {
+  const W = 280, H = 220, pad = 40;
+  let svg = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="font-family:var(--sans)">`;
+  // axes
+  svg += `<line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="#c8c4bc" stroke-width="1.5"/>`;
+  svg += `<line x1="${pad}" y1="${pad}" x2="${pad}" y2="${H-pad}" stroke="#c8c4bc" stroke-width="1.5"/>`;
+  // labels
+  svg += `<text x="${W/2}" y="${H-6}" text-anchor="middle" font-size="10" fill="#7b8ba3">${v1}</text>`;
+  svg += `<text x="12" y="${H/2}" text-anchor="middle" font-size="10" fill="#7b8ba3" transform="rotate(-90,12,${H/2})">${v2}</text>`;
+  // best-fit line
+  if (showLine) {
+    let x1, y1, x2, y2;
+    if (lineDir === 'positive') {
+      x1 = pad + 5; y1 = H - pad - 10; x2 = W - pad - 5; y2 = pad + 10;
+    } else {
+      x1 = pad + 5; y1 = pad + 10; x2 = W - pad - 5; y2 = H - pad - 10;
+    }
+    svg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--blue)" stroke-width="2.5" stroke-dasharray="6,4" opacity="0.8"/>`;
+  }
+  svg += '</svg>';
+  document.getElementById(containerId).innerHTML = svg;
+}
+
+function buildAkProblems() {
+  const c = document.getElementById('akProblems'); c.innerHTML = '';
+  akProblems.forEach((prob, idx) => {
+    const div = document.createElement('div'); div.className = 'practice-item'; div.id = prob.id;
+    div.innerHTML = `
+      <h3>${prob.title}</h3>
+      <div class="scenario"><div class="slabel">Scenario</div><p>${prob.scenario}</p></div>
+      <div class="output">${prob.output}</div>
+
+      <p style="font-size:14px;color:var(--ink-faint);margin:16px 0 6px">Write your answers, then check:</p>
+      <div class="answer-row"><label>Variables:</label><textarea placeholder="What two things were measured?"></textarea></div>
+      <div class="answer-row"><label>H₀:</label><textarea placeholder="Write the null hypothesis..."></textarea></div>
+      <div class="answer-row"><label>Hₐ:</label><textarea placeholder="Write the alternative hypothesis..."></textarea></div>
+      <div class="answer-row"><label>APA write-up:</label><textarea placeholder="Write the full APA result..." style="min-height:90px"></textarea></div>
+      <div class="answer-row"><label>Plain language:</label><textarea placeholder="Interpret in plain language..." style="min-height:72px"></textarea></div>
+
+      <!-- GRAPH INTERACTION -->
+      <div class="graph-area">
+        <h4>Graph</h4>
+        <div class="graph-controls">
+          <div class="ctrl-group">
+            <span class="ctrl-label">Direction of best-fit line</span>
+            <div class="opts" id="${prob.id}-dir-opts">
+              <button data-pickdir="${prob.id}" data-dir="positive" data-idx="${idx}">↗ Positive (goes up left to right)</button>
+              <button data-pickdir="${prob.id}" data-dir="negative" data-idx="${idx}">↘ Negative (goes down left to right)</button>
+            </div>
+          </div>
+        </div>
+        <div class="axis-select">
+          <label>X-axis:</label>
+          <select id="${prob.id}-xaxis" data-axischeck="${prob.id}" data-idx="${idx}">
+            <option value="">— select variable —</option>
+            <option value="${prob.v1}">${prob.v1}</option>
+            <option value="${prob.v2}">${prob.v2}</option>
+          </select>
+          <label>Y-axis:</label>
+          <select id="${prob.id}-yaxis" data-axischeck="${prob.id}" data-idx="${idx}">
+            <option value="">— select variable —</option>
+            <option value="${prob.v1}">${prob.v1}</option>
+            <option value="${prob.v2}">${prob.v2}</option>
+          </select>
+        </div>
+        <div class="fb" id="${prob.id}-graph-fb"></div>
+        <div class="graph-svg-wrap" id="${prob.id}-svg"></div>
+      </div>
+
+      <button class="reveal-btn" data-reveal="${prob.id}">Reveal All Answers</button>
+      <div class="revealed" id="${prob.id}-answer">
+        <div class="card ${prob.sig?'ok':'no'}" style="margin-top:10px">
+          <h4>Answers${prob.sig?'':' — NOT significant'}</h4>
+          <p><strong>Variables:</strong> ${prob.v1} and ${prob.v2}.</p>
+          <p><strong>H₀:</strong> There is no relationship between ${prob.v1.toLowerCase()} and ${prob.v2.toLowerCase()} (<em>r</em> = 0).</p>
+          <p><strong>Hₐ:</strong> There is a relationship between ${prob.v1.toLowerCase()} and ${prob.v2.toLowerCase()} (<em>r</em> ≠ 0).</p>
+          <p><strong>Decision:</strong> ${prob.decision}</p>
+        </div>
+        <div class="apa" style="margin-top:10px">
+          <header>Model APA Write-Up</header>
+          <div class="body">${prob.apa.replace(/r\(/g,'<em>r</em>(').replace(/p [<=]/g,m=>'<em>p</em> '+m.slice(2))}</div>
+        </div>
+        <div class="card" style="margin-top:10px; border-left:3px solid var(--teal)">
+          <h4>Plain Language Interpretation</h4>
+          <p>${prob.plain}</p>
+        </div>
+        <div class="card" style="margin-top:10px; border-left:3px solid var(--blue)">
+          <h4>Graph Answer</h4>
+          <p><strong>Direction:</strong> ${prob.graphDir.charAt(0).toUpperCase()+prob.graphDir.slice(1)} — the line goes ${prob.graphDir==='positive'?'up':'down'} from left to right.</p>
+          <p><strong>X-axis:</strong> ${prob.v1} &nbsp; <strong>Y-axis:</strong> ${prob.v2}</p>
+        </div>
+      </div>`;
+    c.appendChild(div);
+    // Draw initial empty graph (axes only, no line yet)
+    drawSVG(prob.id+'-svg', '?', '?', false, null);
+  });
+}
+
+const graphState = {};
+function pickDir(id, dir, idx) {
+  const prob = akProblems[idx];
+  graphState[id] = graphState[id] || {};
+  graphState[id].dir = dir;
+  const btns = document.querySelectorAll(`#${id}-dir-opts button`);
+  btns.forEach(b => {
+    b.disabled = true;
+    if (dir === prob.graphDir && b.textContent.includes(dir==='positive'?'Positive':'Negative')) b.classList.add('right');
+    else if (dir !== prob.graphDir && b.textContent.includes(dir==='positive'?'Positive':'Negative')) b.classList.add('wrong');
+    else if (b.textContent.includes(prob.graphDir==='positive'?'Positive':'Negative')) b.classList.add('right');
+  });
+  updateGraph(id, idx);
+}
+
+function checkAxes(id, idx) {
+  graphState[id] = graphState[id] || {};
+  graphState[id].x = document.getElementById(id+'-xaxis').value;
+  graphState[id].y = document.getElementById(id+'-yaxis').value;
+  updateGraph(id, idx);
+}
+
+function updateGraph(id, idx) {
+  const prob = akProblems[idx];
+  const gs = graphState[id] || {};
+  const xLabel = gs.x || '?';
+  const yLabel = gs.y || '?';
+  const showLine = !!gs.dir;
+  const lineDir = gs.dir || 'positive';
+  drawSVG(id+'-svg', xLabel, yLabel, showLine, lineDir);
+
+  // Show feedback when both axes are selected
+  if (gs.x && gs.y && gs.dir) {
+    const fb = document.getElementById(id+'-graph-fb');
+    const dirCorrect = gs.dir === prob.graphDir;
+    const axesCorrect = gs.x === prob.v1 && gs.y === prob.v2;
+    let msg = '';
+    if (dirCorrect && axesCorrect) {
+      msg = '✓ Perfect! Direction and axis placement are both correct.';
+      fb.className = 'fb show y';
+    } else {
+      const parts = [];
+      if (!dirCorrect) parts.push(`Direction should be ${prob.graphDir}`);
+      if (!axesCorrect) parts.push(`X-axis should be ${prob.v1}, Y-axis should be ${prob.v2}`);
+      msg = '✗ Not quite. ' + parts.join('. ') + '.';
+      fb.className = 'fb show n';
+    }
+    fb.textContent = msg;
+  }
+}
+
+function reveal(id) {
+  const el = document.getElementById(id + '-answer');
+  el.classList.toggle('show');
+  const btn = el.previousElementSibling;
+  btn.textContent = el.classList.contains('show') ? 'Hide Answers' : 'Reveal All Answers';
+}
+
+/* ═══════════════════════════════════════════════════
+   PRESENT MODE NAV
+   ═══════════════════════════════════════════════════ */
+
+let currentSlide = 0;
+
+function showSlide(i) {
+  const sections = document.querySelectorAll('section.sec');
+  sections.forEach(s => s.classList.remove('active'));
+  sections[i].classList.add('active');
+  currentSlide = i;
+  document.getElementById('pcount').textContent = `${i+1} / ${sections.length}`;
+  document.getElementById('ppfill').style.width = ((i+1)/sections.length*100)+'%';
+  window.scrollTo(0,0);
+}
+
+function navPresent(dir) {
+  const sections = document.querySelectorAll('section.sec');
+  const next = currentSlide + dir;
+  if (next >= 0 && next < sections.length) showSlide(next);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); navPresent(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); navPresent(-1); }
+  if (e.key === 'f' || e.key === 'F') { if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
+});
+
+/* ═══════════════════════════════════════════════════
+   EVENT DELEGATION — replaces all inline onclick/onchange
+   ═══════════════════════════════════════════════════ */
+
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+
+  // MC quiz buttons (var, hyp, apa, table)
+  if (btn.dataset.mc) {
+    checkMC(btn.dataset.mc, +btn.dataset.qi, +btn.dataset.oi);
+    return;
+  }
+  // Verb quiz buttons
+  if (btn.dataset.verb !== undefined) {
+    checkVerb(+btn.dataset.verb, btn.dataset.choice);
+    return;
+  }
+  // Interp quiz buttons
+  if (btn.dataset.interp !== undefined) {
+    checkInterp(+btn.dataset.interp, btn.dataset.itype, +btn.dataset.oi);
+    return;
+  }
+  // Pick direction buttons
+  if (btn.dataset.pickdir) {
+    pickDir(btn.dataset.pickdir, btn.dataset.dir, +btn.dataset.idx);
+    return;
+  }
+  // Reveal buttons
+  if (btn.dataset.reveal) {
+    reveal(btn.dataset.reveal);
+    return;
+  }
+  // Reset buttons
+  if (btn.dataset.reset) {
+    resetQuiz(btn.dataset.reset);
+    return;
+  }
+  // Nav buttons
+  if (btn.id === 'navBack') { navPresent(-1); return; }
+  if (btn.id === 'navNext') { navPresent(1); return; }
+});
+
+document.addEventListener('change', function(e) {
+  const sel = e.target.closest('select');
+  if (sel && sel.dataset.axischeck) {
+    checkAxes(sel.dataset.axischeck, +sel.dataset.idx);
+  }
+});
+
+/* Init */
+buildVarQuiz();
+buildHypQuiz();
+buildVerbQuiz();
+buildInterpQuiz();
+buildTableQuiz();
+buildApaQuiz();
+buildOrigProblems();
+buildAkProblems();
+showSlide(0);
+</script>
+</body>
+</html>
